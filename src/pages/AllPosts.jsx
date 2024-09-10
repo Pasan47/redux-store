@@ -1,33 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { getAllPost } from "../store/postslice";
+import { UseDispatch, useDispatch, useSelector } from "react-redux";
 
 function AllPosts() {
   const [toDo, setToDo] = useState([{}]);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const posts = useSelector((state)=>state.post.posts);
+  const isLoading = useSelector((state)=>state.post.loading);
+  const isError = useSelector((state)=>state.post.error);
+
   useEffect(() => {
-    if (localStorage.getItem("posts")) {
-      const storedArray = localStorage.getItem("posts");
-      console.log(storedArray[10].title);
-
-      const parsedArray = JSON.parse(storedArray);
-      const firstObject = parsedArray[0];
-      const propertyValue = firstObject.title;
-      console.log(propertyValue);
-
-      setToDo(parsedArray);
-    } else {
-      setToDo([]);
-    }
-
-    // console.log(toDo);
-
-    // console.log(localStorage.getItem("posts").length);
-
-    // setToDo(localStorage.getItem("posts"));
-    // console.log(toDo[0].title);
+    const displayPost = dispatch(getAllPost())
+    //console.log(posts);
   }, []);
+
+
+
   return (
     <>
+    { isLoading ? (
+      <p>Loading posts..... </p>
+    ) : isError ? (
+      <p> Error......</p>
+    ) : (
       <table>
         <thead>
           <tr>
@@ -37,17 +35,17 @@ function AllPosts() {
           </tr>
         </thead>
         <tbody>
-          {toDo.map((t, postId) => {
-            console.log(t.title);
-            console.log(t.content);
-            console.log(t.metaTag);
+          {posts.map((p) => {
+            console.log(p.posttitle);
+            console.log(p.postcontent);
+            console.log(p.url);
             return (
               <tr>
-                <td>{t.title}</td>
-                <td>{t.content}</td>
-                <td>{t.metaTag}</td>
+                <td>{p.posttitle}</td>
+                <td>{p.postcontent}</td>
+                <td>{p.url}</td>
                 <td>
-                  <Link to={`editPost/${t.id}`}>Editpost</Link>
+                  <Link to={`editPost/${p.id}`}>Editpost</Link>
                 </td>
                 <td>
                   <button
@@ -63,6 +61,8 @@ function AllPosts() {
           })}
         </tbody>
       </table>
+    )
+      }
     </>
   );
 }

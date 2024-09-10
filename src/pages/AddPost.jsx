@@ -1,34 +1,29 @@
 import React, { useRef } from "react";
-import { createPost } from "../store/postslice";
+import { addPost } from "../store/postslice";
+
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 function AddPost() {
-  const parsedArray = JSON.parse(localStorage.getItem("posts")) || [];
-  let id = useRef(0);
-  let title = useRef("");
-  let content = useRef("");
+
+  let title = useRef("");   /// avoid re render
+  let content = useRef("");  // then write onchange function for each
   let metaTag = useRef("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const changeTitle = (value) => {
     title.current = value;
   };
-  const insertPost = () => {
-    id.current = parsedArray.length !== 0 ? parsedArray.slice(-1)[0].id + 1 : 0;
+  const insertPost = async () => {
+   
     console.log("This is from insert post");
     //event.preventDefault();
     const obj = {
-      id: id.current,
-      title: title.current,
-      content: content.current,
-      metaTag: metaTag.current,
+      posttitle: title.current,
+      postcontent: content.current,
+      url: metaTag.current,
     };
-    console.log(obj);
-
-    dispatch(createPost(obj));
-
-    navigate("/AllPost");
+    dispatch(addPost(obj));   /// send these object as postCredential
   };
 
   const changeContent = (value) => {

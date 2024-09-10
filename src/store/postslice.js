@@ -1,78 +1,133 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import { act } from "react";
 
 const initialState = {
-  posts: JSON.parse(localStorage.getItem("posts")) || [],
+  posts:  [],
   loading: false,
   error: null,
 };
 
+
+export const addPost = createAsyncThunk(
+  "post/addpost",
+  async(postCredential) => {
+    alert(postCredential);    // install axios   to handle async calls
+    const response = await axios.post(
+      'http://localhost:5000/api/post/addpost',
+      postCredential,
+      {
+        headers: {"Content-Type": "application/json"},
+      }
+
+    );
+    return response.data //Return the data from the response
+  }
+)
+
+
+export const getAllPost = createAsyncThunk(
+  "post/getAllPost",
+  async(getAllPost) =>{
+    
+    const response = await axios.get(
+      'http://localhost:5000/api/post/getAllPost',
+      getAllPost,
+      {
+        headers: {"Content-type": "application/json"},
+      }
+    )
+    return response.data
+  })
+
+  // export const editPost = createAsyncThunk(
+  //   "post/getPostById",
+  //   async(editPost)=>{
+  //     const response = await axios.getPostById(
+  //       'http://localhost:5000/api/post//getPostById/:id',
+  //       editPost,
+  //       {
+  //         headers: {"Content-type": "application/json"}
+  //       }
+  //     )
+  //     return response.data
+  //   }
+  // )
+
+
 const postSlice = createSlice({
-  name: "post",
+  name : "post",
   initialState,
-  reducers: {
-    updateProductElementValue: (state, action) => {},
-    fetchPostStart: (state) => {
-      state.loading = true;
-      state.error = null;
-    },
-    fetchPostSuccess: (state, action) => {
-      state.loading = false;
-      state.posts = action.payload;
-    },
-    fetchPostFailure: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
-    createPost: (state, action) => {
-      console.log(state.error);
-
-      console.log(action.payload);
-
-      state.posts.push(action.payload);
-      alert(JSON.stringify(state.posts));
-      localStorage.setItem("posts", JSON.stringify(state.posts));
-      // alert(localStorage.getItem("posts").length);
-    },
-    deletePost: (state, action) => {
-      state.posts = state.posts.filter((post) => post.id !== action.payload.id);
-      localStorage.setItem("posts", JSON.stringify(state.posts));
-    },
-    editPost: (state, action) => {
-      const newArray = JSON.parse(JSON.stringify(state.posts));
-      console.log(state.error);
-
-      let index = 0;
-      let found = false;
-      for (let item in newArray) {
-        alert(action.payload.id);
-        if (newArray[item].id === action.payload.id) {
-          index = item;
-          found = true;
-        }
+  extraReducers: (builder)=>{
+    builder
+    .addCase(addPost.pending,(state)=>{
+      return{
+        ...state,
+        loading:true,
+        error:null,
       }
-      alert(index);
-      if (found) {
-        state.posts[index] = action.payload;
-        alert(index);
-        alert(state.posts[index]);
-
-        localStorage.setItem("posts", JSON.stringify(state.posts));
+    })
+    .addCase(addPost.fulfilled,(state,action)=>{
+      return{
+        ...state,
+        loading:false,
+        error:null,
+        posts: [...state.posts,action.payload]
       }
-    },
-    fetchPostDetails: (state, action) => {
-      const postToEdit = state.posts.find((post) => post.id === action.payload);
-      return postToEdit;
-    },
-  },
-});
+    })
+    .addCase(addPost.rejected,(state,action)=>{
+      return{
+        ...state,
+        loading:false,
+        error: action.error,
+      }
+    })
+    .addCase(getAllPost.pending,(state)=>{
+      return{
+        ...state,
+        loading:true,
+        error:null,
+      }
+    })
+    .addCase(getAllPost.fulfilled,(state,action)=>{
+      return{
+        ...state,
+        loading:false,
+        error:null,
+        posts: action.payload,
+      }
+    })
+    .addCase(getAllPost.rejected,(state,action)=>{
+      return{
+        ...state,
+        loading:false,
+        error: action.error,
+      }
+     })
+    // .addCase(editPost.pending,(state)=>{
+    //   return{
+    //     ...state,
+    //     loading:true,
+    //     error:null,
+    //   }
+    // })
+    // .addCase(editPost.fulfilled,(state,action)=>{
+    //   return{
+    //     ...state,
+    //     loading:false,
+    //     error:null,
+    //     posts: action.payload,
+    //   }
+    // })
+    // .addCase(editPost.rejected,(state,action)=>{
+    //   return{
+    //     ...state,
+    //     loading:false,
+    //     error:null,
+    //     posts: action.error,
+    //   }
+    // })
+  }
+})
 
-export const {
-  fetchPostStart,
-  fetchPostSuccess,
-  fetchPostFailure,
-  createPost,
-  deletePost,
-  editPost,
-  fetchPostDetails,
-} = postSlice.actions;
-export default postSlice.reducer;
+export default postSlice.reducer

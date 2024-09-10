@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from "react";
-import postslice, { editPost, fetchPostDetails } from "../store/postslice";
+
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+//import { editPost } from "../store/postslice";
 
 function EditPost() {
   const dispatch = useDispatch();
@@ -15,30 +16,32 @@ function EditPost() {
   console.log(postId);
 
   useEffect(() => {
-    const postToEdit =
-      postIdToEdit.current && posts.find((post) => post.id === 3);
-    console.log(postIdToEdit.current);
-    console.log(posts);
-    console.log(postId);
+   // dispatch(editPost(postId))
+    // const postToEdit =
+    //   postIdToEdit.current && posts.find((post) => post.id === 3);
+    // console.log(postIdToEdit.current);
+    // console.log(posts);
+    // console.log(postId);
 
-    title.current = postToEdit.title;
-    content.current = postToEdit.content;
-    metaTag.current = postToEdit.metaTag;
-    document.getElementById("title").value = title.current;
-    document.getElementById("content").value = content.current;
-    document.getElementById("metaTag").value = metaTag.current;
-    console.log(postId);
+    // title.current = postToEdit.title;
+    // content.current = postToEdit.content;
+    // metaTag.current = postToEdit.metaTag;
+    // document.getElementById("title").value = title.current;
+    // document.getElementById("content").value = content.current;
+    // document.getElementById("metaTag").value = metaTag.current;
+    // console.log(postId);
   }, []);
 
-  const changePost = () => {
+  const changePost = async () => {
+    console.log("Edit");
     const postObj = {
       id: postId,
-      title: title.current,
-      content: content.current,
-      metaTag: metaTag.current,
+      posttitle: title.current,
+      postcontent: content.current,
+      url: metaTag.current,
     };
-    dispatch(editPost(postObj));
-    navigate("/AllPost");
+   
+   // dispatch(editPost())
   };
   return (
     <div>
@@ -94,7 +97,7 @@ function EditPost() {
           className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           onClick={changePost}
         >
-          {postId}
+          edit
         </button>
       </form>
     </div>
