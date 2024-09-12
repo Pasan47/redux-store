@@ -9,6 +9,10 @@ function Home() {
   const goToAddUser = () => {
     navigate("/AddUser");
   };
+  const goToDisplayUser = () => {
+    navigate("/AllUsers");
+  };
+
   return (
     <>
       <div className="grid-cols-12">
@@ -20,6 +24,11 @@ function Home() {
         <div className="col-span-6">
           <button type="sumbit" onClick={goToAddUser}>
             Go to add user
+          </button>
+        </div>
+        <div className="col-span-6">
+          <button type="sumbit" onClick={goToDisplayUser}>
+            Display Users
           </button>
         </div>
       </div>

@@ -15,6 +15,7 @@ import SignUp from "./pages/signup";
 import EditPost from "./pages/EditPost";
 import AddUser from "./user/AddUser";
 import EditUser from "./user/EditUser";
+import AllUsers from "./user/AllUser";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -36,6 +37,11 @@ const router = createBrowserRouter([
         path: "AddPost",
         element: <Protected childern={<AddPost />} />,
       },
+      {
+        path: "AllUsers",
+        element: <Protected childern={<AllUsers />} />,
+      },
+
       { path: "AllPost", element: <AllPosts /> },
       { path: "SignUp", element: <SignUp /> },
       { path: "Login", element: <Login /> },
