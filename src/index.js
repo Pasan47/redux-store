@@ -15,6 +15,7 @@ import SignUp from "./pages/signup";
 import EditPost from "./pages/EditPost";
 import AddUser from "./user/AddUser";
 import EditUser from "./user/EditUser";
+import AllUsers from "./user/AllUser";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -41,6 +42,7 @@ const router = createBrowserRouter([
       { path: "Login", element: <Login /> },
       { path: "AllPost/editPost/:postId", element: <EditPost /> },
       { path: "AddUser", element: <AddUser /> },
+      { path: "AllUsers", element: <AllUsers /> },
       { path: "EditUser", element: <EditUser /> },
     ],
   },
